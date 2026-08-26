@@ -42,8 +42,7 @@ git clone https://github.com/dolbyexe/mandec.git
 cd mandec
 ```
 
-`vahdam` is the default branch, so this lands you on it. Confirm with
-`git branch --show-current`.
+`main` is the default branch, so this lands you on it.
 
 ### 3. Install dependencies
 
