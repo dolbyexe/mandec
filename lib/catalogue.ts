@@ -8,6 +8,7 @@ import type {
   CatalogueProduct,
   Confidence,
   ResolvedItem,
+  SavedAlias,
   SheetLine,
   Supplier,
 } from './types';
@@ -168,8 +169,13 @@ function describe(p: CatalogueProduct) {
   return { ingredients: renderIngredients(p), components: [] as string[], notes: [] as string[] };
 }
 
-/** Group identical job lines, then resolve each group against the catalogue. */
-export function resolveLines(lines: SheetLine[]): ResolvedItem[] {
+/**
+ * Group identical job lines, then resolve each group against the catalogue.
+ * `saved` is the local overlay of hand-confirmed entries; it outranks everything
+ * else, because a human has already looked at that exact job line.
+ */
+export function resolveLines(lines: SheetLine[], saved: SavedAlias[] = []): ResolvedItem[] {
+  const savedByKey = new Map(saved.map((s) => [normKey(s.match), s]));
   const groups = new Map<string, { description: string; lines: number[] }>();
   for (const row of lines) {
     const key = normKey(row.description);
@@ -181,16 +187,38 @@ export function resolveLines(lines: SheetLine[]): ResolvedItem[] {
 
   return [...groups.values()]
     .sort((a, b) => a.lines[0] - b.lines[0])
-    .map((g) => resolveOne(g.description, g.lines));
+    .map((g) => resolveOne(g.description, g.lines, savedByKey.get(normKey(g.description))));
 }
 
-function resolveOne(entryDescription: string, lines: number[]): ResolvedItem {
+function resolveOne(
+  entryDescription: string,
+  lines: number[],
+  saved?: SavedAlias,
+): ResolvedItem {
   const base = {
     lines,
     linesLabel: formatLineLabel(lines),
     entryDescription,
     suggestions: suggestionsFor(entryDescription),
+    saved: false,
   };
+
+  // 0. Confirmed by hand last time this job line came through.
+  if (saved) {
+    return {
+      ...base,
+      saved: true,
+      description: saved.description,
+      ingredients: saved.ingredients,
+      components: saved.components,
+      notes: saved.notes,
+      sourceUrl: null,
+      confidence: 'saved',
+      matchNote:
+        `Confirmed by hand on ${new Date(saved.savedAt).toLocaleDateString('en-AU')} ` +
+        'and remembered locally. Use Forget to fall back to the catalogue.',
+    };
+  }
 
   const alias = aliasByKey.get(normKey(entryDescription));
 
@@ -283,4 +311,5 @@ export const confidenceRank: Record<Confidence, number> = {
   fuzzy: 2,
   exact: 3,
   alias: 4,
+  saved: 5,
 };

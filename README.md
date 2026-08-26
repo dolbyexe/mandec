@@ -33,43 +33,19 @@ node -v      # must be v20.x or higher
 npm -v
 ```
 
-### 2. Get access to the repo
+### 2. Clone
 
-`dolbyexe/mandec` is **private**, so a plain `git clone` will fail with a 404
-until you authenticate. Easiest route is the [GitHub CLI](https://cli.github.com):
-
-```bash
-gh auth login          # choose GitHub.com > HTTPS > log in with a browser
-```
-
-Sign in as an account with access to `dolbyexe/mandec`.
-
-### 3. Clone
-
-```bash
-gh repo clone dolbyexe/mandec
-cd mandec
-```
-
-`vahdam` is the repository's default branch, so this lands you on it. Confirm
-with `git branch --show-current`.
-
-<details>
-<summary>Without the GitHub CLI</summary>
-
-Create a personal access token with `repo` scope at
-<https://github.com/settings/tokens>, then:
+The repository is public, so this needs no account, token or login:
 
 ```bash
 git clone https://github.com/dolbyexe/mandec.git
 cd mandec
 ```
 
-Git will prompt for a username and password — paste the **token** as the
-password, not your account password.
-</details>
+`vahdam` is the default branch, so this lands you on it. Confirm with
+`git branch --show-current`.
 
-### 4. Install dependencies
+### 3. Install dependencies
 
 ```bash
 npm install
@@ -78,7 +54,7 @@ npm install
 Pulls about 60 packages. Nothing is compiled from source, so this works the same
 on Windows, macOS and Linux.
 
-### 5. Run it
+### 4. Run it
 
 ```bash
 npm run dev
@@ -140,7 +116,28 @@ Hand-maintained, and deliberately separate from the scraped facts.
   the decision is recorded rather than guessed.
 
 **When a new job line will not match, add a row here.** That is the intended
-maintenance path.
+maintenance path — or use **Save for next time** in the app, below.
+
+### `data/aliases.local.json` — what you typed
+
+Created by the **Save for next time** button on the review screen, and
+**gitignored**. Type an ingredient list once and the same job line resolves
+automatically on every future consignment, badged `saved by you`.
+
+It outranks everything else, including the committed alias map, on the grounds
+that a human has already looked at that exact job line. **Forget** drops an
+entry and falls back to the catalogue.
+
+Two reasons this is a separate, ignored file rather than edits to
+`aliases.json`:
+
+- The repository is public, and job-line descriptions identify a client's SKUs.
+- A `git pull` never fights with what someone typed locally.
+
+Saving writes to disk, so it needs somewhere writable — it works when you run
+the app locally, and returns a clear message instead of failing silently on a
+read-only host. The ingredients still apply to the document either way; only
+remembering them needs the write.
 
 ## Matching notes
 
@@ -161,6 +158,7 @@ Shown per item on the review screen:
 
 | Level | Meaning |
 | --- | --- |
+| `saved by you` | You confirmed this by hand and saved it — outranks everything |
 | `mapped` | Resolved through the curated alias map |
 | `exact match` | Job description matched a catalogue title exactly |
 | `check this` | Fuzzy suggestion — **confirm before issuing** |

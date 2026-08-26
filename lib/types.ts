@@ -41,7 +41,18 @@ export type Aliases = {
 export type SheetLine = { line: number; description: string };
 
 /** How confident we are that a job line was matched to the right product. */
-export type Confidence = 'alias' | 'exact' | 'fuzzy' | 'unresolved' | 'none';
+export type Confidence = 'saved' | 'alias' | 'exact' | 'fuzzy' | 'unresolved' | 'none';
+
+/** An ingredient list confirmed by hand and remembered for next time. */
+export type SavedAlias = {
+  /** goods description from the job, as typed on the entry */
+  match: string;
+  description: string;
+  ingredients: string;
+  components: string[];
+  notes: string[];
+  savedAt: string;
+};
 
 /** A group of identical job lines, resolved against the catalogue. */
 export type ResolvedItem = {
@@ -61,6 +72,8 @@ export type ResolvedItem = {
   notes: string[];
   sourceUrl: string | null;
   confidence: Confidence;
+  /** true when this came from the local overlay, so it can be forgotten */
+  saved: boolean;
   /** why we matched it this way, shown in the review table */
   matchNote: string;
   /** alternative catalogue products, offered in the review UI */

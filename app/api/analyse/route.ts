@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ParseError, parseSheet } from '@/lib/parse';
 import { catalogueGeneratedAt, resolveLines, supplier } from '@/lib/catalogue';
+import { readSaved } from '@/lib/localAliases';
 import type { AnalyseResult } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -32,7 +33,8 @@ export async function POST(request: Request) {
 
   try {
     const { lines, columnUsed } = parseSheet(await file.arrayBuffer());
-    const items = resolveLines(lines);
+    // Hand-confirmed entries from previous runs outrank the committed catalogue.
+    const items = resolveLines(lines, await readSaved());
 
     const result: AnalyseResult = {
       supplier,

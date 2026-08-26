@@ -263,3 +263,19 @@ button:disabled {
 .drop input {
   display: none;
 }
+
+.badge.saved {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.item.saved-entry {
+  border-color: var(--ok);
+  box-shadow: inset 3px 0 0 var(--ok);
+}
+
+.flash {
+  font-size: 13px;
+  color: var(--ok);
+  font-weight: 600;
+}

@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import type { AnalyseResult, Confidence, ResolvedItem, Supplier } from '@/lib/types';
 
 const CONFIDENCE_LABEL: Record<Confidence, string> = {
+  saved: 'saved by you',
   alias: 'mapped',
   exact: 'exact match',
   fuzzy: 'check this',
@@ -23,6 +24,8 @@ export default function Page() {
   const [error, setError] = useState('');
   const [dragging, setDragging] = useState(false);
   const [fileName, setFileName] = useState('');
+  const [saving, setSaving] = useState<number | null>(null);
+  const [savedFlash, setSavedFlash] = useState<Record<number, string>>({});
   const fileInput = useRef<HTMLInputElement>(null);
 
   const upload = useCallback(async (file: File) => {
@@ -56,6 +59,66 @@ export default function Page() {
 
   const patch = (index: number, changes: Partial<ResolvedItem>) =>
     setItems((current) => current.map((it, i) => (i === index ? { ...it, ...changes } : it)));
+
+  const flash = (index: number, message: string) => {
+    setSavedFlash((f) => ({ ...f, [index]: message }));
+    setTimeout(() => setSavedFlash((f) => ({ ...f, [index]: '' })), 4000);
+  };
+
+  /** Remember this ingredient list so the same job line resolves next time. */
+  const remember = async (index: number) => {
+    const item = items[index];
+    setSaving(index);
+    setError('');
+    try {
+      const res = await fetch('/api/save-alias', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          match: item.entryDescription,
+          description: item.description,
+          ingredients: item.ingredients,
+          components: item.components,
+          notes: item.notes,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? 'Could not save that entry.');
+        return;
+      }
+      patch(index, { saved: true, confidence: 'saved' });
+      flash(index, 'Saved. This job line will resolve automatically next time.');
+    } catch {
+      setError('Could not reach the server to save that entry.');
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  /** Drop the saved entry so this job line falls back to the catalogue. */
+  const forget = async (index: number) => {
+    const item = items[index];
+    setSaving(index);
+    setError('');
+    try {
+      const res = await fetch(
+        `/api/save-alias?match=${encodeURIComponent(item.entryDescription)}`,
+        { method: 'DELETE' },
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? 'Could not remove that entry.');
+        return;
+      }
+      patch(index, { saved: false });
+      flash(index, 'Forgotten. Re-upload the job to see the catalogue match.');
+    } catch {
+      setError('Could not reach the server.');
+    } finally {
+      setSaving(null);
+    }
+  };
 
   const blocking = useMemo(
     () => items.filter((it) => !it.description.trim() || !it.ingredients.trim()),
@@ -232,7 +295,15 @@ export default function Page() {
               return (
                 <div
                   key={item.entryDescription + i}
-                  className={`item${blocked ? ' blocked' : flagged ? ' needs-review' : ''}`}
+                  className={`item${
+                    blocked
+                      ? ' blocked'
+                      : item.saved
+                        ? ' saved-entry'
+                        : flagged
+                          ? ' needs-review'
+                          : ''
+                  }`}
                 >
                   <div className="item-head">
                     <span className="entry-desc">{item.entryDescription}</span>
@@ -296,7 +367,7 @@ export default function Page() {
                     />
                   </div>
 
-                  <div className="field" style={{ marginBottom: 0 }}>
+                  <div className="field">
                     <label>Notes printed under the ingredients (one per line, optional)</label>
                     <textarea
                       value={item.notes.join('\n')}
@@ -307,6 +378,34 @@ export default function Page() {
                         })
                       }
                     />
+                  </div>
+
+                  <div className="actions">
+                    <button
+                      className="secondary"
+                      disabled={saving === i || blocked}
+                      onClick={() => void remember(i)}
+                      title={
+                        blocked
+                          ? 'Fill in the description and ingredients first'
+                          : 'Remember this for the next job with the same line'
+                      }
+                    >
+                      {saving === i ? 'Saving…' : item.saved ? 'Update saved entry' : 'Save for next time'}
+                    </button>
+
+                    {item.saved && (
+                      <button
+                        className="secondary"
+                        disabled={saving === i}
+                        onClick={() => void forget(i)}
+                        title="Drop the saved entry and fall back to the catalogue"
+                      >
+                        Forget
+                      </button>
+                    )}
+
+                    {savedFlash[i] && <span className="flash">{savedFlash[i]}</span>}
                   </div>
                 </div>
               );
