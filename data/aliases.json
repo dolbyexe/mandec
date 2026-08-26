@@ -1,0 +1,129 @@
+{
+  "_comment": [
+    "Curated mapping from the goods description as it appears on an xClear job report",
+    "to a product in catalogue.json. This file is hand-maintained: the catalogue holds",
+    "scraped FACTS, this file holds the human DECISION about which product a job line is.",
+    "",
+    "  match        goods description from the job (matched case/punctuation-insensitively)",
+    "  product      '<store>/<handle>' key into catalogue.json, or null if not published",
+    "  description  retail description printed on the declaration",
+    "  notes        extra lines printed under the ingredients (allergens, origin caveats)",
+    "  unresolved   set when no published product exists; forces a review flag in the UI",
+    "",
+    "Add a row here whenever a new job line comes through that the app can't match."
+  ],
+
+  "supplier": {
+    "name": "VAHDAM TEAS PRIVATE LIMITED",
+    "addressLines": ["C-12/3, Sector-85, Gautam Buddha Nagar", "Delhi, India"]
+  },
+
+  "_componentAliasesComment": [
+    "Gift sets list their contents using Vahdam's older product names -- 'Saffron Chai",
+    "Spiced Black Tea' is catalogued as 'Saffron Premium Masala Chai Tea'. Token overlap",
+    "cannot bridge that rename, so the decision is recorded here instead of guessed at.",
+    "Only add a row once you have confirmed the two names are the same tea."
+  ],
+  "componentAliases": {
+    "Saffron Chai Spiced Black Tea": "www.vahdam.com/saffron-premium-masala-chai-tea",
+    "Cinnamon Chai Spiced Black Tea": "www.vahdam.com/sweet-cinnamon-masala-chai-tea",
+    "Sweet Cinnamon Chai Tea": "www.vahdam.com/sweet-cinnamon-masala-chai-tea",
+    "Double Spiced Chai Tea": "www.vahdam.com/double-spice-masala-chai-tea",
+    "Vanilla Spice Masala Chai": "www.vahdam.com/vanilla-spiced-masala-chai",
+    "Vanilla Chai Spiced Black Tea": "www.vahdam.com/vanilla-spiced-masala-chai",
+    "Earl Grey Spice Masala Chai": "www.vahdam.com/earl-grey-masala-chai-tea",
+    "Earl Grey Spiced Masala Chai": "www.vahdam.com/earl-grey-masala-chai-tea",
+    "Original Chai Spiced Black Tea": "www.vahdam.com/indias-original-masala-chai-tea",
+    "India's Original Chai Tea": "www.vahdam.com/indias-original-masala-chai-tea",
+    "Cardamom Chai Spiced Black Tea": "www.vahdam.com/cardamon-masala-chai-tea",
+    "Ginger Chai Spiced Black Tea": "www.vahdam.com/ginger-masala-chai-tea",
+    "Kashmiri Kahwa Chai Spiced Green Tea": "www.vahdam.com/kashmiri-kahwa-masala-chai-tea",
+    "Kashmiri Kahwa Green Tea": "www.vahdam.com/kashmiri-kahwa-masala-chai-tea",
+    "Original Himalayan Green Tea": "www.vahdam.com/himalayan-green-tea-3-53oz",
+    "Earl Grey Citrus Black Tea": "www.vahdam.com/earl-grey-citrus-black-tea-12-oz",
+    "Turmeric Spice Herbal Tea Tisane": "www.vahdam.com/turmeric-spice-herbal-tea-tisane",
+    "Turmeric Ginger Herbal Tea": "www.vahdam.com/turmeric-ginger-herbal-tea-tisane",
+    "Pure Mint Herbal Tea": "www.vahdam.com/pure-mint-herbal-tea-100-tea-bags",
+    "Classic Chamomile Herbal Tea": "www.vahdam.com/classic-chamomile-herbal-tea-100-tea-bags",
+    "Hibiscus Rose Herbal Tea": "www.vahdam.com/hibiscus-rose-herbal-tea-100-tea-bags"
+  },
+
+  "entries": [
+    {
+      "match": "HP DANDELION TEA 100TB 200G AUS",
+      "product": null,
+      "description": "Dandelion Herbal Infusion, 100 pyramid tea bags, 200 g retail pouch",
+      "unresolved": "Not published on any Vahdam storefront. Confirm the ingredient statement against the retail pack artwork before issuing."
+    },
+    {
+      "match": "HP GINGER TEA 100TB 200G AUS",
+      "product": "www.vahdam.com/zingy-ginger-herbal-tea-100-count",
+      "description": "Zingy Ginger Herbal Tea, 100 pyramid tea bags, 200 g retail pouch"
+    },
+    {
+      "match": "HIMALAYAN GT 100TB MBZ AUS",
+      "product": "www.vahdam.com/himalayan-green-tea-100-tea-bags",
+      "description": "Himalayan Green Tea, 100 pyramid tea bags"
+    },
+    {
+      "match": "HP PEPPERMINT TEA 100TB 100G AUS",
+      "product": "www.vahdam.com/pure-mint-herbal-tea-100-tea-bags",
+      "description": "Pure Mint Herbal Tea Tisane, 100 pyramid tea bags, 100 g retail pouch"
+    },
+    {
+      "match": "HP CHAMOMILE TEA 100TB 100G AUS",
+      "product": "www.vahdam.com/classic-chamomile-herbal-tea-100-tea-bags",
+      "description": "Classic Chamomile Herbal Tea Tisane, 100 pyramid tea bags, 100 g retail pouch"
+    },
+    {
+      "match": "TURMERIC GINGER HT 100TB MBZ AUS",
+      "product": "www.vahdam.com/turmeric-ginger-herbal-tea-100-tea-bags",
+      "description": "Turmeric Ginger Herbal Tea Tisane, 100 pyramid tea bags"
+    },
+    {
+      "match": "HP TEA ASSORTMENT 8*5TB 62.5G AUS",
+      "product": null,
+      "description": "Herbal Tea Assortment, 8 varieties x 5 pyramid tea bags (40 bags), 62.5 g",
+      "unresolved": "The 8-variety assortment is not published on any Vahdam storefront. The comparable 6-variety Herbal Tea Variety Pack contains Spearmint, Ginger, Hibiscus, Turmeric, Chamomile and Moringa. Confirm the 8 varieties against the retail pack artwork."
+    },
+    {
+      "match": "HIMALAYAN GT 100G AUS",
+      "product": "www.vahdam.com/himalayan-green-tea-3-53oz",
+      "description": "Himalayan Green Tea, 100 g loose leaf"
+    },
+    {
+      "match": "ORIGINAL CHAI SPICED BT 340G AUS",
+      "product": "www.vahdam.com/indias-original-masala-chai-tea-loose-leaf-12oz",
+      "description": "India's Original Masala Chai Tea, 340 g loose leaf"
+    },
+    {
+      "match": "ASSORTED SELECTION 1*15TB AUS",
+      "product": "www.vahdam.com/tea-bags-tea-assortment",
+      "description": "Assorted Selection Tea Sampler, 15 varieties x 1 pyramid tea bag (15 bags)"
+    },
+    {
+      "match": "BLOOM 12 CADDY 250G AUS",
+      "product": "www.vahdam.com/bloom-tea-gift-set-12-tin-caddy",
+      "description": "Bloom Tea Gift Set, 12 teas in tin caddies, 250 g",
+      "notes": ["ALLERGEN: contains Almonds (tree nut) in the Saffron Chai Spiced Black Tea."]
+    },
+    {
+      "match": "HOLIDAY BRKFAST 9 TEAS 180G AUS",
+      "product": "www.vahdam.com/holiday-breakfast-tea-gift-set-9-tin-caddy",
+      "description": "Holiday Breakfast Gift Set (Christmas Breakfast), 9 teas in tin caddies, 180 g",
+      "notes": [
+        "ORIGIN: the Chocolate Vanilla Herbal Tea Tisane in this set contains Rooibos of South African origin; all other botanicals are of Indian origin."
+      ]
+    },
+    {
+      "match": "INDIA'S ORIGINAL MCT 100TB MBZ AUS",
+      "product": "www.vahdam.com/indias-original-masala-chai-tea-100-tea-bags",
+      "description": "India's Original Masala Chai Tea, 100 pyramid tea bags"
+    },
+    {
+      "match": "CLASSIC ENGLISH BREAKFAST 340G AUS",
+      "product": "www.vahdam.com/classic-english-breakfast-black-loose-leaf-tea-12oz",
+      "description": "Classic English Breakfast Black Tea, 340 g loose leaf"
+    }
+  ]
+}
