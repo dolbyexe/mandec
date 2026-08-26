@@ -13,6 +13,7 @@ import {
   WidthType,
   convertMillimetersToTwip,
 } from 'docx';
+import { needsReview } from './types';
 import type { GenerateRequest } from './types';
 
 const FONT = 'Arial';
@@ -140,10 +141,14 @@ function buildItem(item: GenerateRequest['items'][number]): Paragraph[] {
     );
   }
 
+  // Matched items carry a list consolidated from the catalogue; anything still
+  // in "Needs your attention" was supplied by hand, so it prints as a plain list.
   out.push(
     para(
       [
-        run(item.components.length ? 'Consolidated ingredients: ' : 'Ingredients: ', { bold: true }),
+        run(needsReview(item.confidence) ? 'Ingredients: ' : 'Consolidated ingredients: ', {
+          bold: true,
+        }),
         run(item.ingredients || '[TO BE CONFIRMED]'),
       ],
       { after: item.notes.length ? 2 : 9, indent: 6 },

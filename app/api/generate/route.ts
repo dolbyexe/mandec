@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { buildDeclaration, declarationFilename } from '@/lib/docx';
-import type { GenerateRequest } from '@/lib/types';
+import type { Confidence, GenerateRequest } from '@/lib/types';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -8,6 +8,11 @@ export const maxDuration = 30;
 const asString = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
 const asStringArray = (v: unknown) =>
   Array.isArray(v) ? v.map(asString).filter(Boolean) : ([] as string[]);
+
+const CONFIDENCES: Confidence[] = ['saved', 'alias', 'exact', 'fuzzy', 'unresolved', 'none'];
+/** Anything unrecognised falls back to 'none', so the doc never claims a match it cannot back up. */
+const asConfidence = (v: unknown): Confidence =>
+  CONFIDENCES.includes(v as Confidence) ? (v as Confidence) : 'none';
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -44,6 +49,7 @@ export async function POST(request: Request) {
       ingredients: asString(item?.ingredients),
       components: asStringArray(item?.components),
       notes: asStringArray(item?.notes),
+      confidence: asConfidence(item?.confidence),
     }))
     .filter((item) => item.entryDescription);
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { needsReview } from '@/lib/types';
 import type { AnalyseResult, Confidence, ResolvedItem, Supplier } from '@/lib/types';
 
 const CONFIDENCE_LABEL: Record<Confidence, string> = {
@@ -11,9 +12,6 @@ const CONFIDENCE_LABEL: Record<Confidence, string> = {
   unresolved: 'not on file',
   none: 'no match',
 };
-
-/** Items in these states must be filled in by hand before the document is worth issuing. */
-const NEEDS_REVIEW: Confidence[] = ['fuzzy', 'unresolved', 'none'];
 
 /** An item cannot go on a declaration without both of these. */
 const isBlocked = (item: ResolvedItem) =>
@@ -137,7 +135,7 @@ export default function Page() {
     [items],
   );
   const review = useMemo(
-    () => items.filter((it) => NEEDS_REVIEW.includes(it.confidence)),
+    () => items.filter((it) => needsReview(it.confidence)),
     [items],
   );
 
@@ -152,7 +150,7 @@ export default function Page() {
     const attention: { item: ResolvedItem; index: number }[] = [];
     const resolved: { item: ResolvedItem; index: number }[] = [];
     items.forEach((item, index) =>
-      (NEEDS_REVIEW.includes(item.confidence) ? attention : resolved).push({ item, index }),
+      (needsReview(item.confidence) ? attention : resolved).push({ item, index }),
     );
     return { attention, resolved };
   }, [items]);
@@ -184,6 +182,7 @@ export default function Page() {
             ingredients: it.ingredients,
             components: it.components,
             notes: it.notes,
+            confidence: it.confidence,
           })),
         }),
       });
@@ -216,7 +215,7 @@ export default function Page() {
   /** One reviewable product. Kept as a function so both groups can render it. */
   const renderItem = (item: ResolvedItem, i: number) => {
               const blocked = isBlocked(item);
-              const flagged = NEEDS_REVIEW.includes(item.confidence);
+              const flagged = needsReview(item.confidence);
               return (
                 <div
                   key={item.entryDescription + i}
@@ -283,7 +282,7 @@ export default function Page() {
 
                   <div className="field">
                     <label>
-                      {item.components.length ? 'Consolidated ingredients' : 'Ingredients'}
+                      {flagged ? 'Ingredients' : 'Consolidated ingredients'}
                     </label>
                     <textarea
                       value={item.ingredients}

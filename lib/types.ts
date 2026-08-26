@@ -43,6 +43,18 @@ export type SheetLine = { line: number; description: string };
 /** How confident we are that a job line was matched to the right product. */
 export type Confidence = 'saved' | 'alias' | 'exact' | 'fuzzy' | 'unresolved' | 'none';
 
+/** Items in these states must be filled in by hand before the document is worth issuing. */
+export const NEEDS_REVIEW: Confidence[] = ['fuzzy', 'unresolved', 'none'];
+
+/**
+ * True when the item sits in the "Needs your attention" group.
+ *
+ * Also decides the ingredient wording: a matched item's list is consolidated
+ * from the catalogue, so it prints as "Consolidated ingredients"; anything a
+ * human has to supply prints as a plain "Ingredients" list.
+ */
+export const needsReview = (confidence: Confidence) => NEEDS_REVIEW.includes(confidence);
+
 /** An ingredient list confirmed by hand and remembered for next time. */
 export type SavedAlias = {
   /** goods description from the job, as typed on the entry */
@@ -95,6 +107,12 @@ export type GenerateRequest = {
   totalLines: number;
   items: Pick<
     ResolvedItem,
-    'linesLabel' | 'entryDescription' | 'description' | 'ingredients' | 'components' | 'notes'
+    | 'linesLabel'
+    | 'entryDescription'
+    | 'description'
+    | 'ingredients'
+    | 'components'
+    | 'notes'
+    | 'confidence'
   >[];
 };
