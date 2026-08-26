@@ -22,15 +22,87 @@ The same spreadsheet always produces the same document. Fuzzy matching only ever
 produces a *suggestion* that the review screen flags for a human to confirm — it
 never silently decides what goes on a signed declaration.
 
-## Running it
+## Setting up on a new machine
+
+### 1. Install Node.js 20 or newer
+
+Download the LTS build from [nodejs.org](https://nodejs.org). Check it:
+
+```bash
+node -v      # must be v20.x or higher
+npm -v
+```
+
+### 2. Get access to the repo
+
+`dolbyexe/mandec` is **private**, so a plain `git clone` will fail with a 404
+until you authenticate. Easiest route is the [GitHub CLI](https://cli.github.com):
+
+```bash
+gh auth login          # choose GitHub.com > HTTPS > log in with a browser
+```
+
+Sign in as an account with access to `dolbyexe/mandec`.
+
+### 3. Clone
+
+```bash
+gh repo clone dolbyexe/mandec
+cd mandec
+```
+
+`vahdam` is the repository's default branch, so this lands you on it. Confirm
+with `git branch --show-current`.
+
+<details>
+<summary>Without the GitHub CLI</summary>
+
+Create a personal access token with `repo` scope at
+<https://github.com/settings/tokens>, then:
+
+```bash
+git clone https://github.com/dolbyexe/mandec.git
+cd mandec
+```
+
+Git will prompt for a username and password — paste the **token** as the
+password, not your account password.
+</details>
+
+### 4. Install dependencies
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
 ```
 
-Deploy to Vercel as a standard Next.js app — no environment variables, no
-database, no external calls at request time.
+Pulls about 60 packages. Nothing is compiled from source, so this works the same
+on Windows, macOS and Linux.
+
+### 5. Run it
+
+```bash
+npm run dev
+```
+
+Open <http://localhost:3000>. If that port is busy Next picks the next free one
+— read the actual URL off the terminal.
+
+There is nothing else to configure: no `.env` file, no database, no API keys.
+
+### Everyday use
+
+```bash
+cd mandec
+npm run dev
+```
+
+Leave it running while you work; stop it with `Ctrl+C`.
+
+## Deploying
+
+Deploys to Vercel as a standard Next.js app with no environment variables.
+Note that Vercel's free Hobby plan is licensed for personal, non-commercial use
+only — commercial use needs a Pro seat.
 
 ## The data
 
