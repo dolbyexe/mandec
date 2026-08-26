@@ -152,6 +152,24 @@ Two adjustments earned their place, both found by testing against a real job:
   mirror-site listing whose panel reads `CTC` where the home store reads
   `Black Tea`. Candidates from the parent product's own store get a small bonus.
 
+## The review screen
+
+Products are split into two collapsible groups so a long consignment does not
+mean scrolling past everything that is already fine:
+
+- **Needs your attention** — open by default. Anything fuzzy-matched, not on
+  file, or unmatched.
+- **Resolved automatically** — collapsed by default, with a count and a
+  breakdown of what is inside.
+
+A 37-line job with 14 products typically opens showing 2 items rather than 14.
+
+Grouping is on confidence alone, never on whether an item is currently missing
+a field, so nothing jumps between groups while you are mid-edit. The one
+exception: if a resolved item is missing its description or ingredients, that
+group is forced open — otherwise the download stays disabled with nothing on
+screen explaining why.
+
 ## Confidence levels
 
 Shown per item on the review screen:

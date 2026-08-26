@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AnalyseResult, Confidence, ResolvedItem, Supplier } from '@/lib/types';
 
 const CONFIDENCE_LABEL: Record<Confidence, string> = {
@@ -15,6 +15,17 @@ const CONFIDENCE_LABEL: Record<Confidence, string> = {
 /** Items in these states must be filled in by hand before the document is worth issuing. */
 const NEEDS_REVIEW: Confidence[] = ['fuzzy', 'unresolved', 'none'];
 
+/** An item cannot go on a declaration without both of these. */
+const isBlocked = (item: ResolvedItem) =>
+  !item.description.trim() || !item.ingredients.trim();
+
+/** "1 saved by you, 11 mapped" -- what a collapsed group is hiding. */
+const describeBucket = (bucket: { item: ResolvedItem }[]) => {
+  const counts = new Map<Confidence, number>();
+  for (const { item } of bucket) counts.set(item.confidence, (counts.get(item.confidence) ?? 0) + 1);
+  return [...counts.entries()].map(([c, n]) => `${n} ${CONFIDENCE_LABEL[c]}`).join(', ');
+};
+
 export default function Page() {
   const [consignmentLink, setConsignmentLink] = useState('');
   const [analysis, setAnalysis] = useState<AnalyseResult | null>(null);
@@ -25,6 +36,7 @@ export default function Page() {
   const [dragging, setDragging] = useState(false);
   const [fileName, setFileName] = useState('');
   const [saving, setSaving] = useState<number | null>(null);
+  const [showResolved, setShowResolved] = useState(false);
   const [savedFlash, setSavedFlash] = useState<Record<number, string>>({});
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -121,13 +133,36 @@ export default function Page() {
   };
 
   const blocking = useMemo(
-    () => items.filter((it) => !it.description.trim() || !it.ingredients.trim()),
+    () => items.filter(isBlocked),
     [items],
   );
   const review = useMemo(
     () => items.filter((it) => NEEDS_REVIEW.includes(it.confidence)),
     [items],
   );
+
+  /**
+   * Split into what needs a human and what does not.
+   *
+   * Bucketing is on confidence alone, never on whether the item is currently
+   * blocked -- confidence only changes on an explicit save, so an item cannot
+   * jump between groups while someone is mid-edit in it.
+   */
+  const grouped = useMemo(() => {
+    const attention: { item: ResolvedItem; index: number }[] = [];
+    const resolved: { item: ResolvedItem; index: number }[] = [];
+    items.forEach((item, index) =>
+      (NEEDS_REVIEW.includes(item.confidence) ? attention : resolved).push({ item, index }),
+    );
+    return { attention, resolved };
+  }, [items]);
+
+  // A blocked item must never hide inside a collapsed group, or the download
+  // stays disabled with nothing on screen explaining why.
+  const resolvedHasBlocked = grouped.resolved.some(({ item }) => isBlocked(item));
+  useEffect(() => {
+    if (resolvedHasBlocked) setShowResolved(true);
+  }, [resolvedHasBlocked]);
 
   const generate = async () => {
     if (!supplier) return;
@@ -178,119 +213,9 @@ export default function Page() {
     }
   };
 
-  return (
-    <div className="wrap">
-      <header className="masthead">
-        <h1>Manufacturer&rsquo;s Declaration Generator</h1>
-        <p className="sub">
-          Upload a job report, confirm the ingredient breakdowns, download a Word document ready for
-          the supplier to sign.
-        </p>
-      </header>
-
-      {error && <div className="alert bad">{error}</div>}
-
-      <section className="panel">
-        <h2>1 &middot; Consignment</h2>
-        <div className="field">
-          <label htmlFor="consignment">Consignment link</label>
-          <input
-            id="consignment"
-            type="text"
-            value={consignmentLink}
-            placeholder="e.g. 39155425164"
-            onChange={(e) => setConsignmentLink(e.target.value)}
-          />
-        </div>
-
-        <label htmlFor="sheet">Job report spreadsheet (.csv, .xlsx, .xls)</label>
-        <div
-          className={`drop${dragging ? ' over' : ''}`}
-          onClick={() => fileInput.current?.click()}
-          onDragOver={(e) => {
-            e.preventDefault();
-            setDragging(true);
-          }}
-          onDragLeave={() => setDragging(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setDragging(false);
-            const file = e.dataTransfer.files?.[0];
-            if (file) void upload(file);
-          }}
-        >
-          <input
-            id="sheet"
-            ref={fileInput}
-            type="file"
-            accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) void upload(file);
-            }}
-          />
-          {busy === 'analysing'
-            ? 'Reading spreadsheet…'
-            : fileName
-              ? `${fileName} — click or drop to replace`
-              : 'Click to choose a file, or drop one here'}
-        </div>
-      </section>
-
-      {analysis && (
-        <>
-          <section className="panel">
-            <h2>2 &middot; Letterhead</h2>
-            <div className="row">
-              <div className="field">
-                <label htmlFor="supplier-name">Company name</label>
-                <input
-                  id="supplier-name"
-                  type="text"
-                  value={supplier?.name ?? ''}
-                  onChange={(e) =>
-                    setSupplier((s) => (s ? { ...s, name: e.target.value } : s))
-                  }
-                />
-              </div>
-              <div className="field">
-                <label htmlFor="supplier-address">Address (one line per row)</label>
-                <textarea
-                  id="supplier-address"
-                  value={supplier?.addressLines.join('\n') ?? ''}
-                  onChange={(e) =>
-                    setSupplier((s) =>
-                      s ? { ...s, addressLines: e.target.value.split('\n') } : s,
-                    )
-                  }
-                />
-              </div>
-            </div>
-          </section>
-
-          <section className="panel">
-            <h2>
-              3 &middot; Review &mdash; {analysis.totalLines} job lines, {items.length} products
-            </h2>
-
-            {review.length > 0 ? (
-              <div className="alert warn">
-                {review.length} of {items.length} products need checking before you issue this
-                declaration. They are outlined below.
-              </div>
-            ) : (
-              <div className="alert ok">
-                Every product matched a catalogue entry. Still worth a read before you send it.
-              </div>
-            )}
-
-            <p className="sub" style={{ marginBottom: 16 }}>
-              Read from the <code>{analysis.columnUsed}</code> column. Anything you edit here goes
-              straight into the document.
-            </p>
-
-            {items.map((item, i) => {
-              const blocked = !item.description.trim() || !item.ingredients.trim();
+  /** One reviewable product. Kept as a function so both groups can render it. */
+  const renderItem = (item: ResolvedItem, i: number) => {
+              const blocked = isBlocked(item);
               const flagged = NEEDS_REVIEW.includes(item.confidence);
               return (
                 <div
@@ -409,7 +334,154 @@ export default function Page() {
                   </div>
                 </div>
               );
-            })}
+  };
+
+  return (
+    <div className="wrap">
+      <header className="masthead">
+        <h1>Manufacturer&rsquo;s Declaration Generator</h1>
+        <p className="sub">
+          Upload a job report, confirm the ingredient breakdowns, download a Word document ready for
+          the supplier to sign.
+        </p>
+      </header>
+
+      {error && <div className="alert bad">{error}</div>}
+
+      <section className="panel">
+        <h2>1 &middot; Consignment</h2>
+        <div className="field">
+          <label htmlFor="consignment">Consignment link</label>
+          <input
+            id="consignment"
+            type="text"
+            value={consignmentLink}
+            placeholder="e.g. 39155425164"
+            onChange={(e) => setConsignmentLink(e.target.value)}
+          />
+        </div>
+
+        <label htmlFor="sheet">Job report spreadsheet (.csv, .xlsx, .xls)</label>
+        <div
+          className={`drop${dragging ? ' over' : ''}`}
+          onClick={() => fileInput.current?.click()}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragging(false);
+            const file = e.dataTransfer.files?.[0];
+            if (file) void upload(file);
+          }}
+        >
+          <input
+            id="sheet"
+            ref={fileInput}
+            type="file"
+            accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) void upload(file);
+            }}
+          />
+          {busy === 'analysing'
+            ? 'Reading spreadsheet…'
+            : fileName
+              ? `${fileName} — click or drop to replace`
+              : 'Click to choose a file, or drop one here'}
+        </div>
+      </section>
+
+      {analysis && (
+        <>
+          <section className="panel">
+            <h2>2 &middot; Letterhead</h2>
+            <div className="row">
+              <div className="field">
+                <label htmlFor="supplier-name">Company name</label>
+                <input
+                  id="supplier-name"
+                  type="text"
+                  value={supplier?.name ?? ''}
+                  onChange={(e) =>
+                    setSupplier((s) => (s ? { ...s, name: e.target.value } : s))
+                  }
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="supplier-address">Address (one line per row)</label>
+                <textarea
+                  id="supplier-address"
+                  value={supplier?.addressLines.join('\n') ?? ''}
+                  onChange={(e) =>
+                    setSupplier((s) =>
+                      s ? { ...s, addressLines: e.target.value.split('\n') } : s,
+                    )
+                  }
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="panel">
+            <h2>
+              3 &middot; Review &mdash; {analysis.totalLines} job lines, {items.length} products
+            </h2>
+
+            {review.length > 0 ? (
+              <div className="alert warn">
+                {review.length} of {items.length} products need checking before you issue this
+                declaration. They are outlined below.
+              </div>
+            ) : (
+              <div className="alert ok">
+                Every product matched a catalogue entry. Still worth a read before you send it.
+              </div>
+            )}
+
+            <p className="sub" style={{ marginBottom: 16 }}>
+              Read from the <code>{analysis.columnUsed}</code> column. Anything you edit here goes
+              straight into the document.
+            </p>
+
+            <details className="group" open>
+              <summary>
+                <span className="group-title">Needs your attention</span>
+                <span className="group-count warn">{grouped.attention.length}</span>
+                <span className="group-breakdown">{describeBucket(grouped.attention)}</span>
+              </summary>
+              <div className="group-body">
+                {grouped.attention.length === 0 ? (
+                  <p className="sub">
+                    Nothing here. Every product resolved from the catalogue or a saved entry.
+                  </p>
+                ) : (
+                  grouped.attention.map(({ item, index }) => renderItem(item, index))
+                )}
+              </div>
+            </details>
+
+            <details
+              className="group"
+              open={showResolved}
+              onToggle={(e) => setShowResolved(e.currentTarget.open)}
+            >
+              <summary>
+                <span className="group-title">Resolved automatically</span>
+                <span className="group-count ok">{grouped.resolved.length}</span>
+                <span className="group-breakdown">{describeBucket(grouped.resolved)}</span>
+              </summary>
+              <div className="group-body">
+                {grouped.resolved.length === 0 ? (
+                  <p className="sub">Nothing resolved automatically.</p>
+                ) : (
+                  grouped.resolved.map(({ item, index }) => renderItem(item, index))
+                )}
+              </div>
+            </details>
           </section>
 
           <section className="panel">
