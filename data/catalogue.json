@@ -1,12 +1,12 @@
 {
- "generatedAt": "2026-08-25T22:20:42.633Z",
+ "generatedAt": "2026-09-03T05:36:10.597Z",
  "stores": [
   "www.vahdam.com",
   "vahdam.in",
   "www.vahdam.co.uk",
   "www.vahdam.global"
  ],
- "productCount": 569,
+ "productCount": 578,
  "products": [
   {
    "store": "vahdam.in",
@@ -1322,6 +1322,44 @@
     },
     {
      "name": "Cardamom Masala Chai Tea",
+     "detail": ""
+    }
+   ]
+  },
+  {
+   "store": "www.vahdam.co.uk",
+   "handle": "assorted-herbal-tea-sampler-10-x-6-variants",
+   "title": "36 Tea Bags, Caffeine Free, 6 Flavors - Chamomile, Hibiscus, Ginger, Mint, Turmeric",
+   "url": "https://www.vahdam.co.uk/products/assorted-herbal-tea-sampler-10-x-6-variants",
+   "grams": null,
+   "skus": [
+    "Herbal_Tea_6x6_UK"
+   ],
+   "blurb": "A delightful gift set featuring 6 unique herbal tea flavors, each in 6 pyramid tea bags, offering a refreshing and varied tea experience.",
+   "kind": "components",
+   "entries": [
+    {
+     "name": "Turmeric Spiced Herbal Tea Tisane",
+     "detail": ""
+    },
+    {
+     "name": "Turmeric Ginger Herbal Tea Tisane",
+     "detail": ""
+    },
+    {
+     "name": "Pure Mint Herbal Tea Tisane",
+     "detail": ""
+    },
+    {
+     "name": "Classic Chamomile Herbal Tea Tisane",
+     "detail": ""
+    },
+    {
+     "name": "Hibiscus Rose Herbal Tea Tisane",
+     "detail": ""
+    },
+    {
+     "name": "Ginger Chocolate Herbal Tea Tisane",
      "detail": ""
     }
    ]
@@ -6041,6 +6079,20 @@
   },
   {
    "store": "vahdam.in",
+   "handle": "dandelion-root-for-liver-support-and-natural-cleansing",
+   "title": "Dandelion Root - For Liver Support and Natural Cleansing",
+   "url": "https://vahdam.in/products/dandelion-root-for-liver-support-and-natural-cleansing",
+   "grams": null,
+   "skus": [
+    "TB004504035-HP-IND-2",
+    "TB004504035-HP-IND"
+   ],
+   "blurb": "VAHDAM® Dandelion Root Herbal Infusion is a herbal tea powered by Dandelion Root, Hibiscus, and Licorice, with 5 botanicals that support liver health and natural cleansing. It helps you feel lighter as part of your daily detox ritual. Caffeine-free with zero added sugar.",
+   "kind": null,
+   "entries": []
+  },
+  {
+   "store": "vahdam.in",
    "handle": "darjeeling-first-flush-black-tea",
    "title": "Darjeeling First Flush Black Tea, 100 g",
    "url": "https://vahdam.in/products/darjeeling-first-flush-black-tea",
@@ -7568,6 +7620,19 @@
      "detail": ""
     }
    ]
+  },
+  {
+   "store": "www.vahdam.co.uk",
+   "handle": "free-frother",
+   "title": "Free Frother",
+   "url": "https://www.vahdam.co.uk/products/free-frother",
+   "grams": null,
+   "skus": [
+    "FROTHER-01"
+   ],
+   "blurb": "Elevate your Ashwagandha Coffee experience with the VAHDAM® Signature Frother. Crafted with durable stainless steel, this high-speed frother delivers silky, café-style foam in seconds—whether you're at home or on the go.",
+   "kind": null,
+   "entries": []
   },
   {
    "store": "www.vahdam.co.uk",
@@ -9790,6 +9855,19 @@
    "entries": []
   },
   {
+   "store": "www.vahdam.co.uk",
+   "handle": "imperial-tea-maker",
+   "title": "Imperial Tea Maker with Infuser, BPA Free",
+   "url": "https://www.vahdam.co.uk/products/imperial-tea-maker",
+   "grams": null,
+   "skus": [
+    "SN-KV9P-53QX"
+   ],
+   "blurb": "",
+   "kind": null,
+   "entries": []
+  },
+  {
    "store": "www.vahdam.com",
    "handle": "indias-original-masala-chai-tea-100-tea-bags",
    "title": "India's Original Masala Chai Tea, 100 Count",
@@ -9898,6 +9976,22 @@
     {
      "name": "Black Tea",
      "detail": "India"
+    }
+   ]
+  },
+  {
+   "store": "www.vahdam.global",
+   "handle": "indias-original-masala-chai-tea-100-g",
+   "title": "India's Original Masala Chai Tea, 100 g",
+   "url": "https://www.vahdam.global/products/indias-original-masala-chai-tea-100-g",
+   "grams": null,
+   "skus": [],
+   "blurb": "A best selling traditional Indian blend of black tea with a myriad of fresh and aromatic spices, offering a rich and flavorful experience.",
+   "kind": "ingredients",
+   "entries": [
+    {
+     "name": "Black Tea, India",
+     "detail": "Origin - Darjeeling, India"
     }
    ]
   },
@@ -10409,6 +10503,20 @@
    "entries": []
   },
   {
+   "store": "www.vahdam.co.uk",
+   "handle": "ashwagandha-1700-mg-capsules-with-ksm-66",
+   "title": "KSM-66® Ashwagandha Capsules - 1700 mg",
+   "url": "https://www.vahdam.co.uk/products/ashwagandha-1700-mg-capsules-with-ksm-66",
+   "grams": null,
+   "skus": [
+    "TA-FPQS-BZA5",
+    "TA-FPQS-BZA5-pack2"
+   ],
+   "blurb": "A high-strength blend of KSM-66® root-only Ashwagandha extract and Green Tea Extract, delivering natural L-Theanine to support stress relief, mood balance, restful sleep, and daily focus. Made in the USA with clinically validated potency.",
+   "kind": null,
+   "entries": []
+  },
+  {
    "store": "vahdam.in",
    "handle": "lakadong-turmeric-curcumin-supplement-anti-inflammatory-support-60cap",
    "title": "Lakadong Turmeric Curcumin Supplement - 60 Capsules",
@@ -10475,8 +10583,13 @@
     "TB003004036-HP-IND"
    ],
    "blurb": "VAHDAM® Lemon Balm Herbal Infusion is a single-ingredient tea made with 100% pure Lemon Balm leaves that helps ease the mind and refresh the senses. It supports calm and clarity, one cup at a time. Caffeine-free with zero added sugar.",
-   "kind": null,
-   "entries": []
+   "kind": "ingredients",
+   "entries": [
+    {
+     "name": "Lemon Balm",
+     "detail": ""
+    }
+   ]
   },
   {
    "store": "vahdam.in",
@@ -11416,6 +11529,17 @@
    ]
   },
   {
+   "store": "www.vahdam.co.uk",
+   "handle": "perfect-serve-loose-leaf-tea-spoon",
+   "title": "Perfect Serve Loose Leaf Tea Spoon",
+   "url": "https://www.vahdam.co.uk/products/perfect-serve-loose-leaf-tea-spoon",
+   "grams": 20,
+   "skus": [],
+   "blurb": "DURABLE STAINLESS STEEL SPOON - Craft the perfect brew every time with our Perfect Serve Tea Spoon. Designed for precise measurements, this durable 18/8 stainless steel spoon guarantees consistent tea excellence. It's not only high-quality and long-lasting but also dishwasher safe and shatter-resistant. Elevate your tea-making experience with this essential accessory that ensures the perfect cup o",
+   "kind": null,
+   "entries": []
+  },
+  {
    "store": "www.vahdam.com",
    "handle": "perfect-serve-tea-spoon",
    "title": "Perfect Serve Spoon",
@@ -11510,8 +11634,32 @@
     "TB002503963-HT-IND"
    ],
    "blurb": "VAHDAM® Pure Chamomile Herbal Infusion is a 100% single-ingredient herbal infusion made from pure chamomile flowers that soothes the mind, calms the body, and supports a restful night. It helps you unwind and prepare for deep, natural sleep. Caffeine-free with zero added sugar.",
-   "kind": null,
-   "entries": []
+   "kind": "ingredients",
+   "entries": [
+    {
+     "name": "Chamomile",
+     "detail": ""
+    }
+   ]
+  },
+  {
+   "store": "vahdam.in",
+   "handle": "pure-hibiscus-for-skin-and-hair-health",
+   "title": "Pure Hibiscus - For Skin and Hair Health",
+   "url": "https://vahdam.in/products/pure-hibiscus-for-skin-and-hair-health",
+   "grams": null,
+   "skus": [
+    "TB004504109-HT-IND-2",
+    "TB004504109-HT-IND"
+   ],
+   "blurb": "VAHDAM® Pure Hibiscus Herbal Infusion is a single-ingredient tea made with 100% pure Hibiscus flowers that helps support skin glow and hair health. It's naturally rich in antioxidants, one cup at a time. Caffeine-free with zero added sugar.",
+   "kind": "ingredients",
+   "entries": [
+    {
+     "name": "Hibiscus",
+     "detail": ""
+    }
+   ]
   },
   {
    "store": "vahdam.in",
@@ -11697,8 +11845,13 @@
     "TB002503964-HT-IND"
    ],
    "blurb": "VAHDAM® Pure Peppermint Herbal Infusion is a 100% single-ingredient herbal infusion made from pure peppermint leaves that soothes the digestive tract, eases discomfort, and refreshes the senses. It helps you feel lighter and more comfortable after every meal. Caffeine-free with zero added sugar.",
-   "kind": null,
-   "entries": []
+   "kind": "ingredients",
+   "entries": [
+    {
+     "name": "Peppermint",
+     "detail": ""
+    }
+   ]
   },
   {
    "store": "vahdam.in",
@@ -11711,8 +11864,13 @@
     "TB003004012-HT-IND"
    ],
    "blurb": "VAHDAM® Pure Spearmint Herbal Infusion is a 100% single-ingredient herbal infusion made from pure spearmint leaves that supports hormonal balance, promotes clearer skin, and eases post-meal discomfort. It helps you feel balanced and refreshed from the inside out. Caffeine-free with zero added sugar.",
-   "kind": null,
-   "entries": []
+   "kind": "ingredients",
+   "entries": [
+    {
+     "name": "Spearmint",
+     "detail": ""
+    }
+   ]
   },
   {
    "store": "vahdam.in",
@@ -11725,8 +11883,13 @@
     "TB002503965-HT-IND"
    ],
    "blurb": "VAHDAM® Pure Tulsi Herbal Infusion is a single-ingredient tea made with 100% pure Tulsi leaves that helps you feel calm and grounded through your day. It supports daily wellness, one cup at a time. Caffeine-free with zero added sugar.",
-   "kind": null,
-   "entries": []
+   "kind": "ingredients",
+   "entries": [
+    {
+     "name": "Tulsi",
+     "detail": ""
+    }
+   ]
   },
   {
    "store": "vahdam.in",
@@ -11958,6 +12121,19 @@
     "SP010004006-SP-IND"
    ],
    "blurb": "What if one herb could naturally balance your hormones, ease PMS, and restore your vitality - through every stage of life? Shatavari has been doing exactly that for centuries. Pure root. Rich in Saponins. Designed to help you feel balanced, nourished, and revitalised every day.",
+   "kind": null,
+   "entries": []
+  },
+  {
+   "store": "www.vahdam.co.uk",
+   "handle": "shimmer-borosilicate-glass-double-walled-teacup",
+   "title": "Shimmer - Borosilicate Glass Double Walled Teacup",
+   "url": "https://www.vahdam.co.uk/products/shimmer-borosilicate-glass-double-walled-teacup",
+   "grams": null,
+   "skus": [
+    "Y8-UGNC-O6PW"
+   ],
+   "blurb": "",
    "kind": null,
    "entries": []
   },
@@ -15068,7 +15244,7 @@
   {
    "store": "www.vahdam.co.uk",
    "handle": "world-tea-sampler-loose-leaf-teas-20-variants-100-servings",
-   "title": "World of Tea Gift Sampler, 20 Teas",
+   "title": "World Tea Gift Sampler, 20 Teas",
    "url": "https://www.vahdam.co.uk/products/world-tea-sampler-loose-leaf-teas-20-variants-100-servings",
    "grams": null,
    "skus": [

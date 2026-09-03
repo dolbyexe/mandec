@@ -90,6 +90,12 @@ shapes and the scraper records which one it got:
 - `kind: "ingredients"` — a botanical list (*Ginger, Licorice, Fennel…*)
 - `kind: "components"` — the constituent teas of a gift set (*Cardamom Masala Chai Tea, 20 g…*)
 
+vahdam.in's wellness range (*Lemon Balm - For Calm and Clarity*) uses a newer
+page template with no such panel. For those the scraper falls back to the
+product description, but only when it states a single botanical outright
+(*"made with 100% pure Lemon Balm leaves"*). Blends without a panel stay empty
+and are never guessed at.
+
 Refresh it with:
 
 ```bash
@@ -140,7 +146,7 @@ remembering them needs the write.
 
 ## Matching notes
 
-Two adjustments earned their place, both found by testing against a real job:
+Four adjustments earned their place, all found by testing against real jobs:
 
 - **Token stemming.** Vahdam write the same tea as "Double Spice" in one place
   and "Double Spiced" in another. Without stemming those score as unrelated
@@ -150,6 +156,13 @@ Two adjustments earned their place, both found by testing against a real job:
   dilute a product's score, which let a bare gift-set component land on a
   mirror-site listing whose panel reads `CTC` where the home store reads
   `Black Tea`. Candidates from the parent product's own store get a small bonus.
+- **Range prefix.** Job lines carry Vahdam's *Handpick* range name, usually
+  abbreviated (`HP GINGER TEA`, `HANDPICK LEMON BALM TEA`). Titles never do, so
+  it is dropped as packaging noise rather than counted as a missing word.
+- **Benefit taglines.** vahdam.in titles its wellness teas *Lemon Balm - For
+  Calm and Clarity*. The tagline words outnumber the identity words, so
+  `LEMON BALM 100 TB` scored under the threshold against its own product.
+  Anything after ` - For` is stripped before scoring.
 
 ## The review screen
 

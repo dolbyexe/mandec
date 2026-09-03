@@ -18,11 +18,26 @@ const NOISE = new Set([
   'POUCH', 'RETAIL', 'GIFT', 'SET', 'SETS', 'VARIANT', 'VARIANTS', 'VARIETY',
   'FLAVOR', 'FLAVORS', 'FLAVOUR', 'FLAVOURS', 'G', 'GM', 'GMS', 'GRAM', 'GRAMS',
   'KG', 'OZ', 'ML', 'X', 'THE', 'AND', 'OF', 'WITH', 'FREE', 'MBZ',
+  // Vahdam's range prefix. Job lines abbreviate it ("HP GINGER TEA"), the retail
+  // SKUs carry it ("TB003004036-HP-IND"), and product titles never mention it.
+  'HP', 'HANDPICK', 'HANDPICKED',
 ]);
 
-/** Uppercase, strip punctuation, drop the market suffix. Used for exact keys. */
+/**
+ * Benefit tagline that vahdam.in hangs off its wellness titles: "Lemon Balm -
+ * For Calm and Clarity", "Pure Tulsi - For Daily Wellness". Pure marketing; the
+ * product is the part before the dash, and the tagline words would otherwise
+ * outnumber the identity words and sink the score.
+ */
+const TAGLINE = /\s[-\u2013\u2014|]\s*for\b.*$/i;
+
+/**
+ * Uppercase, strip punctuation, drop the market suffix and any benefit tagline.
+ * Used for exact keys.
+ */
 export function normKey(input: string): string {
   const cleaned = input
+    .replace(TAGLINE, '')
     .toUpperCase()
     .replace(/&/g, ' AND ')
     .replace(/[^A-Z0-9]+/g, ' ')

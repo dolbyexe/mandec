@@ -7,6 +7,10 @@
  * lists the component teas (name + pack size). We scrape both shapes and record
  * which one we got, so the document builder can render them differently.
  *
+ * Pages without that section (vahdam.in's wellness range uses a newer template)
+ * fall back to the product description, but only when it states a single
+ * botanical outright -- "made with 100% pure Lemon Balm leaves". Blends stay empty.
+ *
  * Pure scraping + string parsing. Nothing here calls a model.
  *
  * The run is INCREMENTAL and resumable: it merges into whatever is already in
@@ -132,6 +136,23 @@ function parseWhatsInside(html) {
   return entries.length ? { kind, entries } : null;
 }
 
+/**
+ * Fallback for pages with no "What's Inside" panel. Trusts only an explicit
+ * single-ingredient claim in the description:
+ *   "...is a single-ingredient tea made with 100% pure Lemon Balm leaves..."
+ *   "...is a 100% single-ingredient herbal infusion made from pure chamomile flowers..."
+ * There is no growing region to record, so `detail` is left empty.
+ */
+function parseSingleIngredient(bodyHtml) {
+  const text = decode((bodyHtml ?? '').replace(/<[^>]+>/g, ' '));
+  const m = text.match(
+    /single[- ]ingredient[^.]*?\bmade (?:with|from) (?:100%\s*)?pure\s+([A-Za-z][A-Za-z ]*?)\s+(?:leaves|leaf|flowers|flower|petals|roots?|seeds?|buds?|bark)\b/i,
+  );
+  if (!m) return null;
+  const name = m[1].trim().replace(/\b[a-z]/g, (c) => c.toUpperCase());
+  return { kind: 'ingredients', entries: [{ name, detail: '' }] };
+}
+
 async function listProducts(store) {
   let products = [];
   for (let page = 1; page <= 10; page++) {
@@ -165,7 +186,7 @@ async function scrapeStore(store, have) {
   const rows = await pool(todo, async (p) => {
     const url = `https://${store}/products/${p.handle}`;
     const html = await get(url);
-    const inside = parseWhatsInside(html);
+    const inside = parseWhatsInside(html) ?? parseSingleIngredient(p.body_html);
     const grams = p.variants?.map((v) => v.grams).find((g) => g > 0) ?? null;
 
     return {
