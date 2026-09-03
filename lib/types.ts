@@ -46,13 +46,7 @@ export type Confidence = 'saved' | 'alias' | 'exact' | 'fuzzy' | 'unresolved' | 
 /** Items in these states must be filled in by hand before the document is worth issuing. */
 export const NEEDS_REVIEW: Confidence[] = ['fuzzy', 'unresolved', 'none'];
 
-/**
- * True when the item sits in the "Needs your attention" group.
- *
- * Also decides the ingredient wording: a matched item's list is consolidated
- * from the catalogue, so it prints as "Consolidated ingredients"; anything a
- * human has to supply prints as a plain "Ingredients" list.
- */
+/** True when the item sits in the "Needs your attention" group. */
 export const needsReview = (confidence: Confidence) => NEEDS_REVIEW.includes(confidence);
 
 /** An ingredient list confirmed by hand and remembered for next time. */
@@ -61,7 +55,6 @@ export type SavedAlias = {
   match: string;
   description: string;
   ingredients: string;
-  components: string[];
   notes: string[];
   savedAt: string;
 };
@@ -78,8 +71,6 @@ export type ResolvedItem = {
   description: string;
   /** rendered ingredient statement */
   ingredients: string;
-  /** constituent teas, for gift sets and samplers */
-  components: string[];
   /** allergen / origin lines printed under the ingredients */
   notes: string[];
   sourceUrl: string | null;
@@ -111,7 +102,6 @@ export type GenerateRequest = {
     | 'entryDescription'
     | 'description'
     | 'ingredients'
-    | 'components'
     | 'notes'
     | 'confidence'
   >[];

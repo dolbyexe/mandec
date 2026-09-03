@@ -47,7 +47,6 @@ export async function POST(request: Request) {
       entryDescription: asString(item?.entryDescription),
       description: asString(item?.description),
       ingredients: asString(item?.ingredients),
-      components: asStringArray(item?.components),
       notes: asStringArray(item?.notes),
       confidence: asConfidence(item?.confidence),
     }))

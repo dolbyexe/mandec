@@ -88,7 +88,6 @@ export default function Page() {
           match: item.entryDescription,
           description: item.description,
           ingredients: item.ingredients,
-          components: item.components,
           notes: item.notes,
         }),
       });
@@ -180,7 +179,6 @@ export default function Page() {
             entryDescription: it.entryDescription,
             description: it.description,
             ingredients: it.ingredients,
-            components: it.components,
             notes: it.notes,
             confidence: it.confidence,
           })),
@@ -263,27 +261,8 @@ export default function Page() {
                     />
                   </div>
 
-                  {item.components.length > 0 && (
-                    <div className="field">
-                      <label>Comprising ({item.components.length} teas)</label>
-                      <textarea
-                        value={item.components.join('; ')}
-                        onChange={(e) =>
-                          patch(i, {
-                            components: e.target.value
-                              .split(';')
-                              .map((s) => s.trim())
-                              .filter(Boolean),
-                          })
-                        }
-                      />
-                    </div>
-                  )}
-
                   <div className="field">
-                    <label>
-                      {flagged ? 'Ingredients' : 'Consolidated ingredients'}
-                    </label>
+                    <label>Ingredients</label>
                     <textarea
                       value={item.ingredients}
                       placeholder="Full ingredient list — required"

@@ -37,7 +37,6 @@ export async function POST(request: Request) {
       match,
       description,
       ingredients,
-      components: asStringArray(raw.components),
       notes: asStringArray(raw.notes),
     });
     return NextResponse.json({ saved });

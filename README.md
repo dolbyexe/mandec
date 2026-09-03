@@ -204,6 +204,6 @@ A `.docx` following the Ingredients List Declaration template:
 - Letterhead (company name **and** address), title and consignment link in the
   page **header**, so they repeat on every page as the template requires
 - One block per product: job line numbers, the goods description from the job,
-  the retail description, ingredients, and any allergen or origin notes
-- Gift sets additionally list what they comprise, above the consolidated list
+  the retail description, ingredients, and any allergen or origin notes.
+  Gift sets print the ingredients rolled up from their component teas.
 - Signature block, and `Page X of Y` in the footer

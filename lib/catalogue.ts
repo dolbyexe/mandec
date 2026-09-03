@@ -153,7 +153,6 @@ function suggestionsFor(description: string) {
 /** Build the declaration body for one product. */
 function describe(p: CatalogueProduct) {
   if (p.kind === 'components') {
-    const components = p.entries.map((e) => (e.detail ? `${e.name} (${e.detail})` : e.name));
     const rolled = consolidate(
       p.entries.map((e) => e.name),
       p.store,
@@ -163,10 +162,10 @@ function describe(p: CatalogueProduct) {
           `NOTE: ingredients for ${rolled.unmatched.join(', ')} are not on file and must be confirmed.`,
         ]
       : [];
-    return { ingredients: rolled.ingredients, components, notes };
+    return { ingredients: rolled.ingredients, notes };
   }
 
-  return { ingredients: renderIngredients(p), components: [] as string[], notes: [] as string[] };
+  return { ingredients: renderIngredients(p), notes: [] as string[] };
 }
 
 /**
@@ -210,7 +209,6 @@ function resolveOne(
       saved: true,
       description: saved.description,
       ingredients: saved.ingredients,
-      components: saved.components,
       notes: saved.notes,
       sourceUrl: null,
       confidence: 'saved',
@@ -228,7 +226,6 @@ function resolveOne(
       ...base,
       description: alias.description,
       ingredients: '',
-      components: [],
       notes: alias.notes ?? [],
       sourceUrl: null,
       confidence: 'unresolved',
@@ -245,7 +242,6 @@ function resolveOne(
         ...base,
         description: alias.description || p.title,
         ingredients: built.ingredients,
-        components: built.components,
         notes: [...(alias.notes ?? []), ...built.notes],
         sourceUrl: p.url,
         confidence: 'alias',
@@ -267,7 +263,6 @@ function resolveOne(
       ...base,
       description: hit.product.title,
       ingredients: built.ingredients,
-      components: built.components,
       notes: built.notes,
       sourceUrl: hit.product.url,
       confidence: hit.exact ? 'exact' : 'fuzzy',
@@ -283,7 +278,6 @@ function resolveOne(
     ...base,
     description: '',
     ingredients: '',
-    components: [],
     notes: [],
     sourceUrl: null,
     confidence: 'none',
@@ -299,7 +293,6 @@ export function productDetail(key: string) {
   return {
     description: p.title,
     ingredients: built.ingredients,
-    components: built.components,
     notes: built.notes,
     sourceUrl: p.url,
   };
